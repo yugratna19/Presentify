@@ -1,8 +1,8 @@
 import PyPDF2
+import re
 
 def extract_titles_from_pdf(pdf_path):
     titles = []
-    
     with open(pdf_path, 'rb') as file:
         pdf_reader = PyPDF2.PdfReader(file)
         
@@ -12,19 +12,17 @@ def extract_titles_from_pdf(pdf_path):
             
             # Implement your title/subtitle extraction logic here
             
-            # For example, extracting lines in uppercase as potential titles
+            # For example, extracting lines in uppercase and considering bold texts
             lines = text.split('\n')
-            potential_titles = [line.strip() for line in lines if line.isupper()]
+            potential_titles = [line.strip() for line in lines if line.isupper() or '**' in line]
             titles.extend(potential_titles)
     
     return titles
 
 # Usage
-pdf_path = r'C:\Users\ACER\Desktop\Minor Project\Presentify\FormulaEncyclopedia-Proposal.pdf'
+pdf_path = r'FormulaEncyclopedia-Proposal.pdf'
 extracted_titles = extract_titles_from_pdf(pdf_path)
-num = '0123456789'
-for i in range(0,len(extracted_titles)):
-    if '.' in extracted_titles[i]:
-        extracted_titles[i]= extracted_titles[i].replace(".","")
-    extracted_titles[i] = ''.join(char for char in extracted_titles[i] if char.isalpha() or char == " ").strip()
-print(extracted_titles)
+item = ''
+for titles in extracted_titles:
+    item = item  + titles + '\n'
+print(re.findall(r"\b[^\d\W_]+(?: [^\d\W_]+)*\b", item))
